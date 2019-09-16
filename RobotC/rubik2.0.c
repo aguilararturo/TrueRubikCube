@@ -11,7 +11,7 @@
 
 int maxR = 60;
 int maxL = 150;
-int maxB = 90;
+int maxB = 100;
 
 void testP()
 {
@@ -36,20 +36,48 @@ void push()
 
 void moveBaseLeft()
 {
-	moveMotorTarget(bMotor, maxB - 10, 70);
-	waitUntilMotorStop(bMotor);
-	int fix = getMotorEncoder(bMotor);
-	moveMotorTarget(bMotor, maxB - fix, 10);
-	resetMotorEncoder(bMotor);
+	int target = -90;
+			resetMotorEncoder(bMotor);
+			moveMotorTarget(bMotor, target, -70);
+			waitUntilMotorStop(bMotor);
+
+			int current = getMotorEncoder(bMotor);
+			int fix = target - current;
+			int fixSpeed = 0;
+
+			if(current > target)
+			{
+				fixSpeed = 10;
+			} else
+			{
+				fixSpeed = -10;
+			}
+
+			moveMotorTarget(bMotor, fix,fixSpeed);
+			waitUntilMotorStop(bMotor);
 }
 
 void moveBaseRight()
 {
-	moveMotorTarget(bMotor, maxB - 10, 70);
-	waitUntilMotorStop(bMotor);
-	int fix = getMotorEncoder(bMotor);
-	moveMotorTarget(bMotor, maxB - fix, 10);
+	int target = 90;
 	resetMotorEncoder(bMotor);
+	moveMotorTarget(bMotor, target, 70);
+	waitUntilMotorStop(bMotor);
+
+	int current = getMotorEncoder(bMotor);
+	int fix = target - current;
+	int fixSpeed = 0;
+
+	if(current > target)
+	{
+		fixSpeed = -10;
+	} else
+	{
+		fixSpeed = 10;
+	}
+
+	moveMotorTarget(bMotor, fix,fixSpeed);
+	waitUntilMotorStop(bMotor);
 }
 
 void TurnDown()
@@ -380,23 +408,23 @@ task main()
 		int bVal = getMotorEncoder(bMotor);
 		float sVal = getDistanceValue(dSensor);
 
-		displayCenteredBigTextLine(0, "%d", lVal);
-		displayCenteredBigTextLine(2, "%d", rVal);
-		displayCenteredBigTextLine(4, "%f", bVal);
+		displayCenteredTextLine(0, "%d", lVal);
+		displayCenteredTextLine(1, "%d", rVal);
+		displayCenteredTextLine(2, "%f", bVal);
+		displayCenteredTextLine(3, "%f", sVal);
 
 		if (getTouchLEDValue(lTouch) == 1)
 		{
-			startRead();
+			//startRead();
+			moveBaseLeft();
+
+
 		}
 
 		if (getTouchLEDValue(rTouch) == 1)
 		{
-			TurnDown();
-		}
-
-		if (getTouchLEDValue(rTouch) == 1)
-		{
-			TurnDown();
+			//TurnDown();
+			moveBaseRight();
 		}
 	}
 }
