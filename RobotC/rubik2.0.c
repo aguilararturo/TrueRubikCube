@@ -356,6 +356,33 @@ void moveToD()
 	currentFace = 'D';
 }
 
+void moveToB()
+{
+	switch (currentFace)
+	{
+	case 'L':
+		
+		break;
+	case 'F':
+		
+		break;
+	case 'R':
+		
+		break;
+	case 'B':
+		
+		break;
+	case 'D':
+
+		break;
+	case 'U':
+		
+		break;
+	}
+
+	currentFace = 'D';
+}
+
 bool runRead = false;
 
 void startRead()
@@ -383,11 +410,11 @@ void startRead()
 			break;
 		case 'C':
 			moveToD();
-			break;
-		case 'W':
-			break;
+			break;		
 		case 'Y':
-
+			moveToB();
+			break;
+			case 'W':
 			break;
 		case 'O':
 			break;
