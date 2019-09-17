@@ -24,7 +24,6 @@ public class cubeShape {
    public int startY = 0;
     public int h;
     public int w;
-    View moveView;
     float currentScale;
 
     public cubeShape(FrameLayout fra, Context cont) {
@@ -32,7 +31,6 @@ public class cubeShape {
         this.context = cont;
         this.views = new ArrayList<>();
 
-        this.moveView = new View(this.context);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(60, 60);
         params.topMargin = 0;
         params.leftMargin = 0;
@@ -42,31 +40,6 @@ public class cubeShape {
         sd.getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
 
         sd.getPaint().setStrokeWidth(20);
-
-        moveView.setBackground(sd);
-
-        moveView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() ==
-                        MotionEvent.ACTION_MOVE) {
-                    int x = (int) motionEvent.getRawX();
-                    int y = (int) motionEvent.getRawY();
-
-                    FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(view.getWidth(),view.getHeight());
-                    lParams.topMargin = y;
-                    lParams.leftMargin = x;
-
-                    view.setLayoutParams(lParams);
-                    displayShape(currentScale, x, y);
-                }
-                return true;
-            }
-        });
-        this.frame.addView(moveView, params);
-
-        this.moveView.setTranslationZ(2);
-
     }
 
     public int getSize() {
@@ -140,8 +113,6 @@ public class cubeShape {
                 left = left + size;
             }
         }
-
-        this.moveView.setTranslationZ(1);
     }
 
     public void DrawCube(int x, int y, String map) {

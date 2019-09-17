@@ -55,8 +55,8 @@ public class camActivity extends Activity implements OnChangeEvent {
     ScaleGestureDetector SGD;
     cubeShape cube;
     float scale = 1f;
-    int _xDelta = 0;
-    int _yDelta = 0;
+    int xDelta = 0;
+    int yDelta = 0;
     ColorSender sender;
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -125,11 +125,8 @@ public class camActivity extends Activity implements OnChangeEvent {
         public boolean onScale(ScaleGestureDetector detector) {
             scale = scale * detector.getScaleFactor();
 
-            ViewGroup.LayoutParams layoutParams = cube.moveView.getLayoutParams();
-            cube.moveView.setLayoutParams(layoutParams);
-
             txtData.setText(String.valueOf(scale));
-            cube.displayShape(scale, cube.moveView.getLeft(), cube.moveView.getTop());
+            cube.displayShape(scale, cube.startX, cube.startY);
             return true;
         }
     }
@@ -137,6 +134,25 @@ public class camActivity extends Activity implements OnChangeEvent {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         SGD.onTouchEvent(event);
+
+            final int x = (int) event.getRawX();
+            final int y = (int) event.getRawY();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+
+                    xDelta = x - cube.startX;
+                    yDelta = y - cube.startY;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    cube.displayShape(this.scale, x -xDelta, y-yDelta);
+            }
+
         return true;
     }
 
