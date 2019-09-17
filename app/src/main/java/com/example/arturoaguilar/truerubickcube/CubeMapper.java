@@ -14,7 +14,8 @@ public class CubeMapper {
     Context context;
     Bitmap img;
     CubeLog logger;
-    public CubeMapper(Context cont){
+
+    public CubeMapper(Context cont) {
         context = cont;
         logger = new CubeLog(cont);
     }
@@ -23,18 +24,18 @@ public class CubeMapper {
         logger.clear();
         int squareSize = image.getHeight() / 3;
 
-        int ysize = image.getHeight()/3;
-        int xsize = image.getWidth()/3;
+        int ysize = image.getHeight() / 3;
+        int xsize = image.getWidth() / 3;
 
         int h = image.getHeight();
         int w = image.getWidth();
 
         img = image.copy(image.getConfig(), true);
 
-        int a = squareSize/2;
+        int a = squareSize / 2;
 
-        int ay = ysize /2;
-        int ax = xsize /2;
+        int ay = ysize / 2;
+        int ax = xsize / 2;
 
         String result = "";
         for (int j = 0; j < 3; j++) {
@@ -61,7 +62,7 @@ public class CubeMapper {
             y = yPosition + i;
             for (int j = 0; j < iter; j++) {
                 x = xPosition + j;
-                 int color = image.getPixel(x, y);
+                int color = image.getPixel(x, y);
                 img.setPixel(x, y, Color.rgb(0, 255, 255));
 
                 float[] hue = getHue(color);
@@ -103,16 +104,15 @@ public class CubeMapper {
 
         float hue = hsv[0];
         float sat = hsv[1];
-        if(hue>240 && hue<330){
+        if (hue > 240 && hue < 330) {
             return "WHITE";
         }
 
-        if(hue > 220 && hue<245) {
-            if(sat< 0.5) {
-                return  "WHITE";
-            } else
-            {
-                return  "BLUE";
+        if (hue > 220 && hue < 245) {
+            if (sat < 0.5) {
+                return "WHITE";
+            } else {
+                return "BLUE";
             }
         }
 
@@ -134,6 +134,10 @@ public class CubeMapper {
 
         if (hue > 90 && hue < 150) {
             result = "GREEN";
+        }
+
+        if (hue > 40 && hue < 100 && hue < 0.2) {
+            return "WHITE";
         }
 
         if (result == "") {
