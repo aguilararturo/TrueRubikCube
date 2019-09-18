@@ -136,7 +136,7 @@ public class CubeMapper {
             result = "GREEN";
         }
 
-        if (hue > 40 && hue < 100 && hue < 0.2) {
+        if (sat < 0.3) {
             return "WHITE";
         }
 
