@@ -13,7 +13,8 @@
 
 int maxR = 150;
 int maxL = 63;
-int maxB = 100;
+int maxB = 110;
+int testB = 100;
 
 void testP()
 {
@@ -23,40 +24,51 @@ void testP()
 	waitUntilMotorStop(lPusher);
 }
 
-void push()
-{
-	setMotorTarget(rPusher, maxR, 90);
-	waitUntilMotorStop(rPusher);
-	setMotorTarget(rPusher, 1, 90);
-	waitUntilMotorStop(rPusher);
-
-	setMotorTarget(lPusher, maxL, 70);
+void pushLeft(){
+	setMotorTarget(lPusher, maxL, 50);
 	waitUntilMotorStop(lPusher);
+}
+
+void retriveLeft(){
 	setMotorTarget(lPusher, 1, 70);
 	waitUntilMotorStop(lPusher);
+}
+
+
+
+void push()
+{
+	setMotorTarget(rPusher, maxR, 100);
+	waitUntilMotorStop(rPusher);
+	setMotorTarget(rPusher, 1, 100);
+	waitUntilMotorStop(rPusher);
+wait1Msec(100);
+	pushLeft();
+	wait1Msec(200);
+	retriveLeft();
 }
 
 void moveBaseLeft()
 {
 	int target = -90;
-			resetMotorEncoder(bMotor);
-			moveMotorTarget(bMotor, target, -70);
-			waitUntilMotorStop(bMotor);
+	resetMotorEncoder(bMotor);
+	moveMotorTarget(bMotor, target, -70);
+	waitUntilMotorStop(bMotor);
 
-			int current = getMotorEncoder(bMotor);
-			int fix = target - current;
-			int fixSpeed = 0;
+	int current = getMotorEncoder(bMotor);
+	int fix = target - current;
+	int fixSpeed = 0;
 
-			if(current > target)
-			{
-				fixSpeed = 10;
-			} else
-			{
-				fixSpeed = -10;
-			}
+	if(current > target)
+	{
+		fixSpeed = 10;
+	} else
+	{
+		fixSpeed = -10;
+	}
 
-			moveMotorTarget(bMotor, fix,fixSpeed);
-			waitUntilMotorStop(bMotor);
+	moveMotorTarget(bMotor, fix,fixSpeed);
+	waitUntilMotorStop(bMotor);
 }
 
 void moveBaseRight()
@@ -80,6 +92,33 @@ void moveBaseRight()
 
 	moveMotorTarget(bMotor, fix,fixSpeed);
 	waitUntilMotorStop(bMotor);
+}
+
+void TurnDownLeft(){
+	pushLeft();
+
+	resetMotorEncoder(bMotor);
+	setMotorTarget(bMotor, 113, 70);
+	waitUntilMotorStop(bMotor);
+
+	retriveLeft();
+	setMotorTarget(bMotor, 90, 20);
+	waitUntilMotorStop(bMotor);
+	setMotorSpeed(bMotor, 0);
+}
+
+void TurnDownRight(){
+	pushLeft();
+
+	resetMotorEncoder(bMotor);
+	setMotorTarget(bMotor, (testB*-1), 70);
+	waitUntilMotorStop(bMotor);
+
+	retriveLeft();
+
+	setMotorTarget(bMotor, -90, 20);
+	waitUntilMotorStop(bMotor);
+	setMotorSpeed(bMotor, 0);
 }
 
 void TurnDown()
@@ -416,7 +455,7 @@ void startRead()
 		case 'Y':
 			moveToB();
 			break;
-			case 'W':
+		case 'W':
 			break;
 		case 'O':
 			break;
@@ -432,6 +471,38 @@ task main()
 
 	while (true)
 	{
+
+		if(getBumperValue(stopSensor) == 1){
+			currentFace = 'F';
+			runRead = true;
+			startRead();
+		}
+
+		if (getTouchLEDValue(lTouch) == 1)
+		{
+			TurnDownLeft();
+		}
+
+		if (getTouchLEDValue(rTouch) == 1)
+		{
+			//TurnDown();
+			//moveBaseRight();
+			TurnDownRight();
+
+		}
+
+		if (getTouchLEDValue(rT) == 1)
+		{
+			//push();
+			testB = testB + 1;
+			wait1Msec(50);
+		}
+		if (getTouchLEDValue(lT) == 1)
+		{
+			wait1Msec(50);
+			testB = testB - 1;
+		}
+
 		int lVal = getMotorEncoder(lPusher);
 		int rVal = getMotorEncoder(rPusher);
 		int bVal = getMotorEncoder(bMotor);
@@ -441,30 +512,7 @@ task main()
 		displayCenteredTextLine(1, "%d", rVal);
 		displayCenteredTextLine(2, "%f", bVal);
 		displayCenteredTextLine(3, "%f", sVal);
-
-		if (getTouchLEDValue(lTouch) == 1)
-		{
-			currentFace = 'F';
-			runRead = true;
-			startRead();
-			//moveBaseLeft();
-		}
-
-		if (getTouchLEDValue(rTouch) == 1)
-		{
-			//TurnDown();
-			//moveBaseRight();
-		}
-
-		if (getTouchLEDValue(rT) == 1)
-		{
-			push();
-		}
-		if (getTouchLEDValue(lT) == 1)
-		{
-
-		}
-
+		displayCenteredTextLine(4, "%f", testB);
 
 		runRead = false;
 	}
